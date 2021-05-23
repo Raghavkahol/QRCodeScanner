@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@+id/home_fragment">
 
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.example.scanner.home.HomeFragment">
+        android:name="com.example.scanner.home.HomeFragment"
+        tools:layout="@layout/fragment_home">
+
+        <action
+            android:id="@+id/action_home_fragment_to_scanner_fragment"
+            app:destination="@id/scanner_fragment" />
+
+        <argument
+            android:name="sessionData"
+            app:argType="string"
+            android:defaultValue=""/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/scanner_fragment"
+        android:name="com.example.scanner.scanner.ScannerFragment"
+        tools:layout="@layout/fragment_scanner">
+
+        <action
+            android:id="@+id/action_scanner_fragment_to_home_fragment"
+            app:destination="@id/home_fragment" />
+
     </fragment>
 </navigation>

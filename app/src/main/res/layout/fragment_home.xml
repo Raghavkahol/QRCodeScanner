@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
         <variable
-            name="homeViewModel"
+            name="viewModel"
             type="com.example.scanner.home.HomeViewModel" />
     </data>
 
@@ -12,6 +13,149 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".home.HomeFragment">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/scan_now_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scan_now"
+            android:textColor="@color/magenta"
+            android:background="@color/white"
+            android:padding="16dp"
+            app:isVisible="@{!viewModel.isSessionStarted}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="sessionData, sessionStartLabel, sessionStartValue,
+        locationIdLabel, locationIdValue, locationDetailLabel, locationDetailValue,
+        pricePerMinLabel, pricePerMinValue, stopSession"
+            android:id="@+id/group"
+            app:isVisible="@{viewModel.isSessionStarted}"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sessionData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/session_in_progress"
+            android:gravity="center"
+            android:textColor="@color/magenta"
+            android:padding="32dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sessionStartLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/start_time"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/sessionData"
+            app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sessionStartValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/start_time"
+            android:gravity="center"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/sessionData"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/locationIdLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/location_id"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/sessionStartLabel"
+            app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/locationIdValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/location_id"
+            android:gravity="center"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/sessionStartLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/locationDetailLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/location_detail"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/locationIdLabel"
+            app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/locationDetailValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/location_detail"
+            android:gravity="center"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/locationIdValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pricePerMinLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/price_per_min"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/locationDetailLabel"
+            app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pricePerMinValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/price_per_min"
+            android:gravity="center"
+            android:padding="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/locationDetailLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/stopSession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:padding="16dp"
+            android:background="@color/white"
+            android:textColor="@color/magenta"
+            android:text="@string/stop_session"
+            app:layout_constraintTop_toBottomOf="@+id/pricePerMinLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
