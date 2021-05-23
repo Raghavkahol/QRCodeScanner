@@ -8,5 +8,8 @@
     <string name="location_detail">Location Detail</string>
     <string name="price_per_min">Price per Min</string>
     <string name="session_in_progress">Session in Progress</string>
-    <string name="stop_session">Stop Session</string>
+    <string name="end_session">End Session</string>
+    <string name="reset_session">Reset Session</string>
+    <string name="total_cost">Total Cost</string>
+    <string name="end_time">End Time</string>
 </resources>

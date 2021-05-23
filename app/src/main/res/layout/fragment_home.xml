@@ -22,21 +22,12 @@
             android:textColor="@color/magenta"
             android:background="@color/white"
             android:padding="16dp"
-            app:isVisible="@{!viewModel.isSessionStarted}"
+            app:isVisible="@{viewModel.isScanStartState}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
-
-        <androidx.constraintlayout.widget.Group
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:constraint_referenced_ids="sessionData, sessionStartLabel, sessionStartValue,
-        locationIdLabel, locationIdValue, locationDetailLabel, locationDetailValue,
-        pricePerMinLabel, pricePerMinValue, stopSession"
-            android:id="@+id/group"
-            app:isVisible="@{viewModel.isSessionStarted}"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/sessionData"
@@ -47,6 +38,8 @@
             android:textColor="@color/magenta"
             android:padding="32dp"
             android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +53,8 @@
             android:gravity="center"
             android:padding="16dp"
             android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/sessionData"
             app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -68,9 +63,11 @@
             android:id="@+id/sessionStartValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/start_time"
+            android:text="@{viewModel.sesseionStartTime}"
             android:gravity="center"
             android:padding="16dp"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/sessionData"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
@@ -83,6 +80,8 @@
             android:gravity="center"
             android:padding="16dp"
             android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/sessionStartLabel"
             app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -91,9 +90,11 @@
             android:id="@+id/locationIdValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/location_id"
+            android:text="@{viewModel.locationId}"
             android:gravity="center"
             android:padding="16dp"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/sessionStartLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
@@ -106,6 +107,8 @@
             android:gravity="center"
             android:padding="16dp"
             android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/locationIdLabel"
             app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -114,9 +117,11 @@
             android:id="@+id/locationDetailValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/location_detail"
+            android:text="@{viewModel.locationDetail}"
             android:gravity="center"
             android:padding="16dp"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/locationIdValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
@@ -129,6 +134,8 @@
             android:gravity="center"
             android:padding="16dp"
             android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/locationDetailLabel"
             app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
             app:layout_constraintStart_toStartOf="parent"/>
@@ -137,12 +144,69 @@
             android:id="@+id/pricePerMinValue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/price_per_min"
+            android:text="@{viewModel.pricePerMin}"
             android:gravity="center"
             android:padding="16dp"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionInProgressState || viewModel.isSessionCompletedState}"
             app:layout_constraintTop_toBottomOf="@+id/locationDetailLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sessionPriceLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/total_cost"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionCompletedState}"
+            app:layout_constraintTop_toBottomOf="@+id/pricePerMinLabel"
+            app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sessionPriceValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.sessionPrice}"
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionCompletedState}"
+            app:layout_constraintTop_toBottomOf="@+id/pricePerMinLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/endTimeLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/end_time"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textStyle="bold"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionCompletedState}"
+            app:layout_constraintTop_toBottomOf="@+id/sessionPriceLabel"
+            app:layout_constraintEnd_toStartOf="@+id/sessionStartValue"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/endTimeValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.endTime}"
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            app:isVisible="@{viewModel.isSessionCompletedState}"
+            app:layout_constraintTop_toBottomOf="@+id/sessionPriceLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/sessionStartLabel"/>
+
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/stopSession"
@@ -152,10 +216,26 @@
             android:padding="16dp"
             android:background="@color/white"
             android:textColor="@color/magenta"
-            android:text="@string/stop_session"
-            app:layout_constraintTop_toBottomOf="@+id/pricePerMinLabel"
+            android:text="@string/end_session"
+            app:isVisible="@{viewModel.isSessionInProgressState}"
+            app:layout_constraintTop_toBottomOf="@+id/endTimeLabel"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/resetSession"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="32dp"
+            android:padding="16dp"
+            android:background="@color/white"
+            android:textColor="@color/magenta"
+            android:text="@string/reset_session"
+            app:isVisible="@{viewModel.isSessionCompletedState}"
+            app:layout_constraintTop_toBottomOf="@+id/endTimeValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

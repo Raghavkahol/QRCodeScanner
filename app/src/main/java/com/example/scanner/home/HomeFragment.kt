@@ -59,6 +59,10 @@ class HomeFragment : Fragment() {
             stopSession.setOnClickListener {
                 handlePermissionAndLaunchScanner(it)
             }
+
+            resetSession.setOnClickListener {
+                homeViewModel.resetSession()
+            }
         }
         return binding.root
     }
