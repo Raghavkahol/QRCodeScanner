@@ -12,6 +12,7 @@ buildscript {
         gsonVersion = '2.8.2'
         scannerVersion = '2.1.0'
         coroutinesVersion = '1.4.2'
+        roomVersion = '2.2.5'
     }
     repositories {
         google()

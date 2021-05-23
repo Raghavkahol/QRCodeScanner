@@ -1,18 +1,13 @@
 package com.example.scanner.home
 
-import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.budiyev.android.codescanner.CodeScannerView
-import com.example.scanner.R
+import com.example.scanner.data.SessionData
+import com.google.gson.Gson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import javax.inject.Inject
 
 class HomeViewModel @AssistedInject constructor(private val homeRepository: HomeRepository,
                                                  @Assisted private val sessionData: String) : ViewModel() {
@@ -27,9 +22,23 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
         if(sessionData.isEmpty()) {
             isSessionStarted.value = false
         } else {
-            isSessionStarted.value = true
-            homeRepository.postSessionData(sessionData)
+            val session = parseSessionData(sessionData)
+            handleSessionState(session)
         }
+    }
+
+    private fun parseSessionData(sessionData: String) : SessionData {
+        return Gson().fromJson(sessionData, SessionData::class.java)
+    }
+
+    private fun handleSessionState(sessionData: SessionData) {
+        if(sessionData.is_session_progress == true) {
+            isSessionStarted.value = true
+        } else {
+            sessionData.is_session_progress = false
+            isSessionStarted.value = true
+        }
+        homeRepository.postSessionData(sessionData)
     }
 
     companion object {
