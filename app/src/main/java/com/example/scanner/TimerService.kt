@@ -19,10 +19,11 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         createNotificationChannel()
+        val startTime = intent?.getLongExtra("START_TIME", 0)
         val notification =
             NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("SCANNER")
-                .setContentText("Session is in Progress")
+                .setContentText("Library Session is in Progress -> $startTime")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build()
         startForeground(1, notification)

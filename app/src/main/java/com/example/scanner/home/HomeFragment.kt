@@ -24,6 +24,7 @@ class HomeFragment : BaseViewModelFragment() {
 
     private var startTimerService: Boolean = false
     private val args: HomeFragmentArgs by navArgs()
+    private var startTime: Long = 0L;
 
     @Inject
     lateinit var homeViewModelFactory: HomeViewModelFactory
@@ -115,10 +116,12 @@ class HomeFragment : BaseViewModelFragment() {
 
     private fun startService() {
         val serviceIntent = Intent(context, TimerService::class.java)
+        serviceIntent.putExtra("START_TIME", startTime)
         context?.let { ContextCompat.startForegroundService(it, serviceIntent) }
     }
 
     override fun onViewModelStartWithRequest(state: ViewModelLifecycleState.actionOnSessionState) {
         startTimerService = state.startTimerService
+        startTime = state.startTime
     }
 }

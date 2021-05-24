@@ -67,7 +67,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
             handleInProgressState()
         } else {
             setScanNowState()
-            lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(false))
+            lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(
+                false, startTime))
         }
     }
 
@@ -86,7 +87,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
         session.start_time = System.currentTimeMillis()
         startTime = session.start_time
         insertSessionStartData(session)
-        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(true))
+        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(
+            true, startTime))
         startTimerTask();
     }
 
@@ -149,7 +151,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
 
     private fun handleCompletedState(persistedSessionData: SessionData) {
         setSessionCompletedState()
-        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(false))
+        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(
+            false, startTime))
         insertSessionEndData(persistedSessionData)
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
@@ -176,7 +179,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
 
     private fun handlePersistedProgressState(persistedSessionData: SessionData) {
         startTime = persistedSessionData.start_time
-        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(true))
+        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(
+            true, startTime))
         startTimerTask()
         setSessionInProgressState()
         insertSessionStartData(persistedSessionData)
@@ -241,7 +245,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(false))
+                    lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(
+                        false, startTime))
                     setScanNowState()
                 }, {
                     it.printStackTrace()
