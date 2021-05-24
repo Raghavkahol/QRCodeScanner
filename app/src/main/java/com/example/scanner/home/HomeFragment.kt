@@ -13,16 +13,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.scanner.PermissionUtils
-import com.example.scanner.R
-import com.example.scanner.TimerService
+import com.example.scanner.*
 import com.example.scanner.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : BaseViewModelFragment() {
+
+    private var startTimerService: Boolean = false
     private val args: HomeFragmentArgs by navArgs()
 
     @Inject
@@ -65,6 +65,7 @@ class HomeFragment : Fragment() {
                 homeViewModel.resetSession()
             }
         }
+        bindViewModel(homeViewModel)
         return binding.root
     }
 
@@ -107,12 +108,17 @@ class HomeFragment : Fragment() {
     }
 
     override fun onStop() {
-        startService()
         super.onStop()
+        if(startTimerService)
+            startService()
     }
 
     private fun startService() {
         val serviceIntent = Intent(context, TimerService::class.java)
         context?.let { ContextCompat.startForegroundService(it, serviceIntent) }
+    }
+
+    override fun onViewModelStartWithRequest(state: ViewModelLifecycleState.actionOnSessionState) {
+        startTimerService = state.startTimerService
     }
 }

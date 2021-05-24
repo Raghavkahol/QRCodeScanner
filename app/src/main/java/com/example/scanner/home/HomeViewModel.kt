@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.scanner.BaseViewModel
+import com.example.scanner.ViewModelLifecycleState
 import com.example.scanner.data.SessionData
 import com.example.scanner.data.SessionInfoRequest
 import com.google.gson.Gson
@@ -66,6 +67,7 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
             handleInProgressState()
         } else {
             setScanNowState()
+            lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(false))
         }
     }
 
@@ -84,6 +86,7 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
         session.start_time = System.currentTimeMillis()
         startTime = session.start_time
         insertSessionStartData(session)
+        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(true))
         startTimerTask();
     }
 
@@ -146,6 +149,7 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
 
     private fun handleCompletedState(persistedSessionData: SessionData) {
         setSessionCompletedState()
+        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(false))
         insertSessionEndData(persistedSessionData)
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
@@ -172,6 +176,7 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
 
     private fun handlePersistedProgressState(persistedSessionData: SessionData) {
         startTime = persistedSessionData.start_time
+        lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(true))
         startTimerTask()
         setSessionInProgressState()
         insertSessionStartData(persistedSessionData)
@@ -236,11 +241,12 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
+                    lifecycleState.onNext(ViewModelLifecycleState.actionOnSessionState(false))
+                    setScanNowState()
                 }, {
                     it.printStackTrace()
                 })
         }
-        setScanNowState()
     }
 
     companion object {
