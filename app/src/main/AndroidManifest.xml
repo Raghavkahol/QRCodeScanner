@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".MainApplication"
@@ -20,6 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".TimerService"
+            android:process=":second"
+            android:enabled="true"/>
     </application>
 
 </manifest>

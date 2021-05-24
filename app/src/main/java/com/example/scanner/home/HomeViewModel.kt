@@ -2,7 +2,6 @@ package com.example.scanner.home
 
 import android.annotation.SuppressLint
 import android.os.Handler
-import android.os.SystemClock
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -21,7 +20,8 @@ import java.util.*
 
 
 class HomeViewModel @AssistedInject constructor(private val homeRepository: HomeRepository,
-                                                 @Assisted private val sessionData: String) : BaseViewModel() {
+                                                 @Assisted private val sessionData: String)
+                                                    : BaseViewModel() {
 
      var isScanStartState = MutableLiveData<Boolean>()
      var isSessionInProgressState = MutableLiveData<Boolean>()
@@ -140,7 +140,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
     }
 
     private fun isSessionInCompletedState(persistedSessionData: SessionData) : Boolean{
-        return sessionData.isNotEmpty() && persistedSessionData.start_time != 0L || persistedSessionData.end_time != 0L
+        return sessionData.isNotEmpty() && persistedSessionData.start_time != 0L
+                || persistedSessionData.end_time != 0L
     }
 
     private fun handleCompletedState(persistedSessionData: SessionData) {
@@ -252,10 +253,6 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 return assistedFactory.create(plantId) as T
             }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
     }
 }
 
