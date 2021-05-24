@@ -9,8 +9,8 @@ data class SessionData(
     var location_id : String? = null,
     var location_details: String? = null,
     var price_per_min: Float? = null,
-    var start_time: Long? = null,
-    var end_time: Long? = null,
+    var start_time: Long = 0L,
+    var end_time: Long = 0L,
     var time_spent: Int? = null,
     var is_session_progress: Boolean? = false
 )

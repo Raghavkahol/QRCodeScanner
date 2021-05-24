@@ -1,6 +1,8 @@
 package com.example.scanner.home
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.SystemClock
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -30,7 +32,10 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
      var pricePerMin =  MutableLiveData<String>()
      var sessionPrice =  MutableLiveData<String>()
      var endTime =  MutableLiveData<String>()
-
+     var sessionTimer = MutableLiveData<String>()
+     private val mHandler: Handler = Handler()
+     private var startTime : Long = 0L
+    
     init {
         getSessionData()
     }
@@ -75,8 +80,11 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
 
     private fun handleInProgressState() {
         val session = parseSessionData(sessionData)
-        insertSessionStartData(session)
         setSessionInProgressState()
+        session.start_time = System.currentTimeMillis()
+        startTime = session.start_time
+        insertSessionStartData(session)
+        startTimerTask();
     }
 
     private fun parseSessionData(sessionData: String) : SessionData {
@@ -85,20 +93,40 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
         return Gson().fromJson(ss, SessionData::class.java)
     }
 
-    private fun insertSessionStartData(sessionData: SessionData) {
-        sessionData.start_time = System.currentTimeMillis()
+    private fun insertSessionStartData(persistedSessionData: SessionData) {
+        if(persistedSessionData.start_time == 0L)
+            persistedSessionData.start_time = System.currentTimeMillis()
         bindDisposable {
-            homeRepository.insertSessionData(sessionData)
+            homeRepository.insertSessionData(persistedSessionData)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    handleSessionStartState(sessionData)
+                    handleSessionStartState(persistedSessionData)
                 }, {
                     it.printStackTrace()
                 })
         }
     }
 
+    private fun startTimerTask() {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    private val mUpdateTimeTask: Runnable = object : Runnable {
+        override fun run() {
+            val millis = System.currentTimeMillis() - startTime
+            var seconds = (millis / 1000).toInt()
+            val minutes = seconds / 60
+            seconds %= 60
+            if (seconds < 10) {
+                sessionTimer.value = "$minutes:0$seconds"
+            } else {
+                sessionTimer.value = "$minutes:$seconds"
+            }
+           mHandler.postDelayed(this,  1000)
+        }
+    }
     private fun setSessionInProgressState() {
         isScanStartState.value = false
         isSessionCompletedState.value = false
@@ -112,12 +140,13 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
     }
 
     private fun isSessionInCompletedState(persistedSessionData: SessionData) : Boolean{
-        return sessionData.isNotEmpty() && persistedSessionData.start_time != null || persistedSessionData.end_time != null
+        return sessionData.isNotEmpty() && persistedSessionData.start_time != 0L || persistedSessionData.end_time != 0L
     }
 
     private fun handleCompletedState(persistedSessionData: SessionData) {
         setSessionCompletedState()
         insertSessionEndData(persistedSessionData)
+        mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
     private fun setSessionCompletedState() {
@@ -141,13 +170,15 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
     }
 
     private fun handlePersistedProgressState(persistedSessionData: SessionData) {
+        startTime = persistedSessionData.start_time
+        startTimerTask()
         setSessionInProgressState()
         insertSessionStartData(persistedSessionData)
     }
 
     private fun handleSessionStartState(sessionData: SessionData) {
         sessionData.run {
-            sesseionStartTime.value =  getSessionTimeFormat().format(Date())
+            sesseionStartTime.value =  getSessionTimeFormat().format(Date(sessionData.start_time))
             locationId.value = location_id
             locationDetail.value = location_details
             pricePerMin.value = price_per_min.toString()
@@ -175,10 +206,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
             locationId.value = location_id
             locationDetail.value = location_details
             pricePerMin.value = price_per_min.toString()
-            val startTimeInDateFormat = start_time?.let { Date(it) }
-            val endTimeInDateFormat = end_time?.let { Date(it) }
-            sesseionStartTime.value =  startTimeInDateFormat?.let {getSessionTimeFormat().format(it)  }
-            endTime.value = endTimeInDateFormat?.let { getSessionTimeFormat().format(it) }
+            sesseionStartTime.value =  getSessionTimeFormat().format(start_time)
+            endTime.value =  getSessionTimeFormat().format(end_time)
         }
     }
 
@@ -223,6 +252,10 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 return assistedFactory.create(plantId) as T
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
     }
 }
 

@@ -48,7 +48,7 @@ class HomeFragment : Fragment() {
                 PermissionUtils.checkForPermission(
                     it, arrayOf(
                         Manifest.permission.CAMERA,
-                    ), 101
+                    )
                 )
             }
 
@@ -91,7 +91,7 @@ class HomeFragment : Fragment() {
             PermissionUtils.checkForPermission(
                 activity,  arrayOf(
                     Manifest.permission.CAMERA,
-                ), 101)
+                ))
         }
     }
 }
