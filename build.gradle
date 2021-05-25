@@ -13,6 +13,11 @@ buildscript {
         scannerVersion = '2.1.0'
         coroutinesVersion = '1.4.2'
         roomVersion = '2.2.5'
+        coreTestingVersion = '2.0.0'
+        testExtJunit = '1.1.0'
+        uiAutomatorVersion = '2.2.0'
+        espressoVersion = '3.1.1'
+        junitVersion = '4.12'
     }
     repositories {
         google()

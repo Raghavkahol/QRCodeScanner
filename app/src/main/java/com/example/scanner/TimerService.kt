@@ -30,7 +30,7 @@ class TimerService : Service() {
         calculateTime(startTime)
         val notification =
             notificationBuilder
-                .setContentTitle("SCANNER")
+                .setContentTitle(getString(R.string.scanner))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build()
         startForeground(1, notification)
@@ -63,7 +63,7 @@ class TimerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
-                "Foreground Service Channel",
+                "Timer Channel",
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationManager = getSystemService(

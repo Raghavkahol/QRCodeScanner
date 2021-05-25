@@ -13,4 +13,6 @@
     <string name="total_cost">Total Cost</string>
     <string name="end_time">End Time</string>
     <string name="session_time">Session Time</string>
+    <string name="scanner">SCANNER</string>
+    <string name="session_timer">"Library Session is in Progress -> %s"</string>
 </resources>
