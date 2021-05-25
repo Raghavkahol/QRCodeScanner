@@ -49,7 +49,9 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 .subscribe({
                     setUpSessionState(it)
                 }, {
-                    it.printStackTrace()
+                    it.message?.let { message ->
+                        ViewModelLifecycleState.showToast(message)
+                    }?.let { event -> lifecycleState.onNext(event) }
                 })
         }
     }
@@ -108,7 +110,9 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 .subscribe({
                     handleSessionStartState(persistedSessionData)
                 }, {
-                    it.printStackTrace()
+                    it.message?.let { message ->
+                        ViewModelLifecycleState.showToast(message)
+                    }?.let { event -> lifecycleState.onNext(event) }
                 })
         }
     }
@@ -177,7 +181,9 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 .subscribe({
                     handleSessionEndState(persistedSessionData)
                 }, {
-                    it.printStackTrace()
+                    it.message?.let { message ->
+                        ViewModelLifecycleState.showToast(message)
+                    }?.let { event -> lifecycleState.onNext(event) }
                 })
         }
     }
@@ -246,7 +252,9 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                 }, {
-                    it.printStackTrace()
+                    it.message?.let { message ->
+                        ViewModelLifecycleState.showToast(message)
+                    }?.let { event -> lifecycleState.onNext(event) }
                 })
         }
     }
@@ -261,7 +269,9 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
                         false, startTime))
                     setScanNowState()
                 }, {
-                    it.printStackTrace()
+                    it.message?.let { message ->
+                        ViewModelLifecycleState.showToast(message)
+                    }?.let { event -> lifecycleState.onNext(event) }
                 })
         }
     }

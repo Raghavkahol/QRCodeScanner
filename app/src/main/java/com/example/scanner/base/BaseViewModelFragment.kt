@@ -19,7 +19,11 @@ abstract class BaseViewModelFragment : Fragment() {
         viewModelBinder.bindViewModel(viewModel)
     }
 
-    open fun onViewModelStartWithRequest(state: ViewModelLifecycleState.actionOnSessionState) {
+    open fun actionOnSessionState(state: ViewModelLifecycleState.actionOnSessionState) {
+
+    }
+
+    open fun showToast(message: String) {
 
     }
 

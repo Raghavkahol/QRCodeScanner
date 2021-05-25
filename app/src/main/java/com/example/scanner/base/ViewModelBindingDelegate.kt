@@ -28,7 +28,9 @@ class ViewModelBinder(private val fragmentRef: WeakReference<BaseViewModelFragme
         fragmentRef.get()?.let {
                 when (state) {
                     is ViewModelLifecycleState.actionOnSessionState ->
-                        it.onViewModelStartWithRequest(state)
+                        it.actionOnSessionState(state)
+                    is ViewModelLifecycleState.showToast ->
+                        it.showToast(state.message)
                 }
         }
     }

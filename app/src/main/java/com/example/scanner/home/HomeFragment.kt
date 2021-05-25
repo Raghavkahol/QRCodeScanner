@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -121,8 +122,13 @@ class HomeFragment : BaseViewModelFragment() {
         context?.let { ContextCompat.startForegroundService(it, serviceIntent) }
     }
 
-    override fun onViewModelStartWithRequest(state: ViewModelLifecycleState.actionOnSessionState) {
+    override fun actionOnSessionState(state: ViewModelLifecycleState.actionOnSessionState) {
         startTimerService = state.startTimerService
         startTime = state.startTime
+    }
+
+    override fun showToast(message: String) {
+        super.showToast(message)
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
     }
 }
