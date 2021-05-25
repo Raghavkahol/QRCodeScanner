@@ -1,4 +1,4 @@
-package com.example.scanner
+package com.example.scanner.base
 
 
 import io.reactivex.disposables.Disposable
@@ -17,7 +17,8 @@ class ViewModelBinder(private val fragmentRef: WeakReference<BaseViewModelFragme
         val disposableList :ArrayList<Disposable> = arrayListOf()
 
         if(viewModel.lifecycleState.hasNoObservers())
-            disposableList.add(viewModel.lifecycleState.subscribe { state -> handleLifecycleStateChange(state) })
+            disposableList.add(viewModel.lifecycleState.subscribe { state ->
+                handleLifecycleStateChange(state) })
 
 
         return disposableList.toTypedArray()
@@ -26,7 +27,8 @@ class ViewModelBinder(private val fragmentRef: WeakReference<BaseViewModelFragme
     private fun handleLifecycleStateChange(state: ViewModelLifecycleState) {
         fragmentRef.get()?.let {
                 when (state) {
-                    is ViewModelLifecycleState.actionOnSessionState -> it.onViewModelStartWithRequest(state)
+                    is ViewModelLifecycleState.actionOnSessionState ->
+                        it.onViewModelStartWithRequest(state)
                 }
         }
     }

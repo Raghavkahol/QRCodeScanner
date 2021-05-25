@@ -1,4 +1,4 @@
-package com.example.scanner
+package com.example.scanner.base
 
 import android.view.View
 import androidx.databinding.BindingAdapter

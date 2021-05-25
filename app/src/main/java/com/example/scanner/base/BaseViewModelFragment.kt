@@ -1,12 +1,7 @@
-package com.example.scanner
+package com.example.scanner.base
 
-import android.view.MenuItem
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 
 
 abstract class BaseViewModelFragment : Fragment() {

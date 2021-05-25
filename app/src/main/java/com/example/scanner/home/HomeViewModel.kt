@@ -5,8 +5,8 @@ import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.scanner.BaseViewModel
-import com.example.scanner.ViewModelLifecycleState
+import com.example.scanner.base.BaseViewModel
+import com.example.scanner.base.ViewModelLifecycleState
 import com.example.scanner.data.SessionData
 import com.example.scanner.data.SessionInfoRequest
 import com.google.gson.Gson
@@ -203,11 +203,18 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
     private fun handleSessionEndState(persistedSessionData: SessionData) {
         persistedSessionData.run {
             setSessionDataUI(this)
-            val minutesSpent = calculateSessionPrice(start_time, end_time)
-            val price: Float? = price_per_min?.let{(minutesSpent?.toFloat()?.times(it))}
+            val diffMs = start_time.let { end_time.minus(it) }
+            val diffSec = diffMs.div(1000)
+            var extraMin = 1;
+            if(diffSec.rem(60)==0L) {
+                extraMin = 0
+            }
+            val minutesSpent = diffSec.let { if(it > 60 )it.div(60)+extraMin else 1 }
+
+            val price: Float? = price_per_min?.let{(minutesSpent.toFloat().times(it))}
             sessionPrice.value = price.toString()
             if(sessionData.isNotEmpty())
-                postSessionData(SessionInfoRequest(location_id, minutesSpent?.toInt(), end_time))
+                postSessionData(SessionInfoRequest(location_id, minutesSpent.toInt(), end_time))
         }
     }
 

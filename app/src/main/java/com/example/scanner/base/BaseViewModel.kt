@@ -1,4 +1,4 @@
-package com.example.scanner
+package com.example.scanner.base
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
