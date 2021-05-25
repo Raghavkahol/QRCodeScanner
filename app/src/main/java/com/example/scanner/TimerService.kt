@@ -39,7 +39,7 @@ class TimerService : Service() {
 
     private fun calculateTime(startTime: Long?) {
             mHandler.removeCallbacks(mUpdateTimeTask);
-            mHandler.postDelayed(mUpdateTimeTask, 100);
+            mHandler.postDelayed(mUpdateTimeTask, 0);
     }
 
     private val mUpdateTimeTask: Runnable = object : Runnable {

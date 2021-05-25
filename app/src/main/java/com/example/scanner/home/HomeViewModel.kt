@@ -145,8 +145,12 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
     }
 
     private fun isSessionInCompletedState(persistedSessionData: SessionData) : Boolean{
-        return sessionData.isNotEmpty() && persistedSessionData.start_time != 0L
-                || persistedSessionData.end_time != 0L
+        return if(sessionData.isNotEmpty()) {
+            val session = parseSessionData(sessionData)
+            (session.location_id == persistedSessionData.location_id) && (sessionData.isNotEmpty()
+                    && persistedSessionData.start_time != 0L || persistedSessionData.end_time != 0L)
+        } else
+            persistedSessionData.end_time != 0L
     }
 
     private fun handleCompletedState(persistedSessionData: SessionData) {
@@ -164,7 +168,8 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
     }
 
     private fun insertSessionEndData(persistedSessionData: SessionData) {
-        persistedSessionData.end_time = System.currentTimeMillis()
+        if(persistedSessionData.end_time == 0L)
+            persistedSessionData.end_time = System.currentTimeMillis()
         bindDisposable {
             homeRepository.insertSessionData(persistedSessionData)
                 .subscribeOn(Schedulers.io())
@@ -197,7 +202,7 @@ class HomeViewModel @AssistedInject constructor(private val homeRepository: Home
 
     @SuppressLint("SimpleDateFormat")
     private fun getSessionTimeFormat(): DateFormat {
-        return SimpleDateFormat("dd/M/yyyy hh:mm:ss")
+        return SimpleDateFormat("hh:mm:ss")
     }
 
     private fun handleSessionEndState(persistedSessionData: SessionData) {
