@@ -7,12 +7,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
+import android.provider.Settings.Global.getString
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 
 
 class TimerService : Service() {
-    private val CHANNEL_ID = "500001"
     private var timerData : String? = null
     private var startTime : Long? = 0L
     private val mHandler: Handler = Handler()
@@ -26,18 +26,18 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         createNotificationChannel()
-        startTime = intent?.getLongExtra("START_TIME", 0)
-        calculateTime(startTime)
+        startTime = intent?.getLongExtra(START_TIME, 0)
+        calculateTime()
         val notification =
             notificationBuilder
                 .setContentTitle(getString(R.string.scanner))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .build()
-        startForeground(1, notification)
+        startForeground(NOTIFICATION_ID, notification)
         return START_REDELIVER_INTENT
     }
 
-    private fun calculateTime(startTime: Long?) {
+    private fun calculateTime() {
             mHandler.removeCallbacks(mUpdateTimeTask);
             mHandler.postDelayed(mUpdateTimeTask, 0);
     }
@@ -53,8 +53,8 @@ class TimerService : Service() {
             } else {
                 timerData = "$minutes:$seconds"
             }
-            notificationBuilder.setContentTitle("Library Session is in Progress -> $timerData")
-            notificationManager?.notify(1, notificationBuilder.build())
+            notificationBuilder.setContentTitle(String.format(getString(R.string.session_timer), timerData))
+            notificationManager?.notify(NOTIFICATION_ID, notificationBuilder.build())
             mHandler.postDelayed(this,  1000)
         }
     }
@@ -63,7 +63,7 @@ class TimerService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
-                "Timer Channel",
+                TIMER_CHANNEL,
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationManager = getSystemService(

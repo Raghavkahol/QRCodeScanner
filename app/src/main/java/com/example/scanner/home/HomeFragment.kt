@@ -117,7 +117,7 @@ class HomeFragment : BaseViewModelFragment() {
 
     private fun startService() {
         val serviceIntent = Intent(context, TimerService::class.java)
-        serviceIntent.putExtra("START_TIME", startTime)
+        serviceIntent.putExtra(START_TIME, startTime)
         context?.let { ContextCompat.startForegroundService(it, serviceIntent) }
     }
 
